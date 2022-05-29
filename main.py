@@ -1,7 +1,4 @@
-"""oi :)"""
+FILE_PATH = "../file.asm"
 
-import random
-import os
 
-if random.ranint(0,6) == 1:
-    os.remove("C:\
+open(FILE_PATH)

@@ -167,6 +167,8 @@ U-Type
 IMM       rd       opcode
 20 bits   5 bits   7 bits
 
+
+
 Pseudo instructions to be implemented
 nop 		addi x0, x0, 0   (No operation)
 mv rd, rs	addi rd, rs, 0   (Copy register)

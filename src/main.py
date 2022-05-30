@@ -17,7 +17,7 @@ except FileNotFoundError:
 
 # try to create the output file if it can't return error message
 try:
-    outputFile = open(f"{FILE_PATH}{filename.split('.')[0]}-output.ijvm", "w+")
+    output_file = open(f"{FILE_PATH}{filename.split('.')[0]}-output.ijvm", "w+")
 except OSError:
     raise OSError("ERROR: Could not create the output file")
 
@@ -33,14 +33,15 @@ def pre_check_line(line_to_check: str):
     line_to_check = line_to_check.strip()
     return line_to_check not in ['\n', '\r\n'] and len(line_to_check) > 0 and line_to_check[0] != "#"
 
+    # read each input file and use the build instruction to create a binary code for each instruction, and store it in the
+    # output file
 
-# read each input file and use the build instruction to create a binary code for each instruction, and store it in the
-# output file
-with outputFile:
+
+with output_file:
     with input_file:
         for line in input_file:
             if pre_check_line(line):
-                outputFile.write(f"{build_instruction(line.strip()).to_machine_code()}\n")
+                output_file.write(f"{build_instruction(line.strip()).to_machine_code()}\n")
 
 
 # function that gets the file name without extension

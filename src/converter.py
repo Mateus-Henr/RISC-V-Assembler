@@ -161,7 +161,7 @@ def get_register_binary_code(register: str):
     input: register string
 
     output: a 5 bits binary number."""
-    return "{0:05b}".format(perform_overflow_if_happens(int(register.replace("x", "")), 5))
+    return "{0:05b}".format(perform_overflow_if_happens(convert_to_decimal(register.replace("x", "")), 5))
 
 
 # function that return the binary code of the immediate
@@ -171,7 +171,7 @@ def get_immediate_binary_12bits(immediate: str):
     input: immediate string
 
     output: a 12 bits binary number."""
-    return "{0:012b}".format(perform_overflow_if_happens(int(immediate), 12))
+    return "{0:012b}".format(perform_overflow_if_happens(convert_to_decimal(immediate), 12))
 
 
 # function that return the binary code of the 20bits immediate
@@ -181,7 +181,7 @@ def get_immediate_binary_20bits(immediate: str):
     input: immediate string
 
     output: a 20 bits binary number."""
-    return "{0:020b}".format(perform_overflow_if_happens(int(immediate), 20))
+    return "{0:020b}".format(perform_overflow_if_happens(convert_to_decimal(immediate), 20))
 
 
 # function that performs the overflow
@@ -192,4 +192,18 @@ def perform_overflow_if_happens(value: int, max_bits: int):
 
     output: int max value or a value"""
     max_value = 2 ** max_bits
+
     return value % max_value if value >= max_value else value
+
+
+def convert_to_decimal(value: str):
+    try:
+        if "0x" in value:
+            return int(value, 16)
+        elif all(letter == '0' or letter == '1' for letter in value):
+            return int(value, 2)
+        else:
+            return int(value)
+    except ValueError:
+        print("ERROR: Syntax error, unexpected values. Setting invalid parameter to 0.")
+        return 0

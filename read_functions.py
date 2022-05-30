@@ -61,39 +61,43 @@ class UType(object):
         return str(self.immediate + self.rd + self.opcode)
 
 
+FUNCT3 = 0
+FUNCT7 = 1
+
+
 def build_instruction(line: str):
     """"""
 
     r_types = {
-        "add": {"funct3": "000", "funct7": "0000000"},
-        "sub": {"funct3": "000", "funct7": "0100000"},
-        "and": {"funct3": "111", "funct7": "0000000"},
-        "or": {"funct3": "110", "funct7": "0000000"},
-        "xor": {"funct3": "100", "funct7": "0000000"},
-        "sll": {"funct3": "001", "funct7": "0000000"},
-        "srl": {"funct3": "101", "funct7": "0000000"},
-        "lrd": {"funct3": "011", "funct7": "0010000"},
-        "scd": {"funct3": "011", "funct7": "0001100"}
+        "add": ["000", "0000000"],
+        "sub": ["000", "0100000"],
+        "and": ["111", "0000000"],
+        "or": ["110", "0000000"],
+        "xor": ["100", "0000000"],
+        "sll": ["001", "0000000"],
+        "srl": ["101", "0000000"],
+        "lrd": ["011", "0010000"],
+        "scd": ["011", "0001100"]
     }
 
     i_types = {
-        "addi": {"funct3": "000"},
-        "andi": {"funct3": "111"},
-        "ori": {"funct3": "110"},
-        "lb": {"funct3": "000"},
-        "lbu": {"funct3": "100"},
-        "lh": {"funct3": "001"},
-        "lhu": {"funct3": "101"},
-        "lw": {"funct3": "010"},
-        "lwu": {"funct3": "110"},
-        "ld": {"funct3": "011"}
+        "addi": ["000"],
+        "andi": ["111"],
+        "ori": ["110"],
+        "lb": ["000"],
+        "lbu": ["100"],
+        "lh": ["001"],
+        "lhu": ["101"],
+        "lw": ["010"],
+        "lwu": ["110"],
+        "ld": ["011"]
     }
 
     s_types = {
-        "sd": {"funct3": "111"},
-        "sw": {"funct3": "010"},
-        "sh": {"funct3": "001"},
-        "sb": {"funct3": "000"}
+        "sd": ["111"],
+        "sw": ["010"],
+        "sh": ["001"],
+        "sb": ["000"]
     }
 
     u_types = {"lui"}
@@ -102,17 +106,17 @@ def build_instruction(line: str):
     instruction_name = instruction[0]
 
     if instruction_name in r_types:
-        return RType(r_types[instruction_name]["funct7"],
+        return RType(r_types[instruction_name][FUNCT7],
                      get_register_binary_code(instruction[3]),
                      get_register_binary_code(instruction[2]),
-                     r_types[instruction_name]["funct3"],
+                     r_types[instruction_name][FUNCT3],
                      get_register_binary_code(instruction[1]))
 
     if instruction_name in i_types:
-        return IType(get_immediate_binary(instruction[3]),
+        return IType(get_immediate_binary(int(instruction[3])),
                      get_register_binary_code(instruction[2]),
                      get_register_binary_code(instruction[1]),
-                     i_types[instruction_name]["funct3"])
+                     i_types[instruction_name][FUNCT3])
 
     if instruction_name in s_types:
         immediate = get_immediate_binary(int(instruction[3]))
@@ -120,11 +124,11 @@ def build_instruction(line: str):
         return SType(immediate[7:11],
                      get_register_binary_code(instruction[3]),
                      get_register_binary_code(instruction[2]),
-                     s_types[instruction_name]["funct3"],
+                     s_types[instruction_name][FUNCT3],
                      immediate[0:6])
 
     if instruction_name in u_types:
-        return UType(get_immediate_binary(instruction[2]),
+        return UType(get_immediate_binary(int(instruction[2])),
                      get_register_binary_code(instruction[1]))
 
 

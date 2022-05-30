@@ -1,17 +1,17 @@
-"""main code"""
-
+import sys
 from read_functions import *
 
-# FILE_PATH = "../"
+"""main code"""
 
-FUNCT3 = 0
-FUNCT7 = 1
+fileName = input("File name: ")
 
-fileName = str(input('File name: '))
-# [a for a in dir(build_instruction(line)) if not a.startswith('__')
-# tryes to read the archive, if it can't, it outputs an error message
+try:
+    file = open(fileName, 'r')
+except OSError:
+    print("Error reading the file:", fileName)
+    sys.exit()
 
-with open(fileName, 'r') as file:
+with file:
     for line in file:
         if line not in ['\n', '\r\n']:
             print(build_instruction(line.strip()).to_machine_code())

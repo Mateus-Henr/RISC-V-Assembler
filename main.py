@@ -1,12 +1,14 @@
 import sys
-from read_functions import *
+from converter import *
+
+FILE_PATH = "test_files/"
 
 """main code"""
 
 fileName = input("File name: ")
 
 try:
-    file = open(fileName, 'r')
+    file = open(f"{FILE_PATH}{fileName}", 'r')
 except OSError:
     print("Error reading the file:", fileName)
     sys.exit()

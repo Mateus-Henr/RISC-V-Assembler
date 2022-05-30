@@ -1,19 +1,31 @@
-import sys
 from converter import *
 
 FILE_PATH = "test_files/"
 
-"""main code"""
-
-fileName = input("File name: ")
+filename = input("Filename: ")
 
 try:
-    file = open(f"{FILE_PATH}{fileName}", 'r')
-except OSError:
-    print("Error reading the file:", fileName)
-    sys.exit()
+    input_file = open(f"{FILE_PATH}{filename}", "r")
+except FileNotFoundError:
+    raise FileNotFoundError(f"Error reading the file:{filename}")
 
-with file:
-    for line in file:
-        if line not in ['\n', '\r\n']:
-            print(build_instruction(line.strip()).to_machine_code())
+try:
+    outputFile = open(f"{FILE_PATH}{filename.split('.')[0]}-output.ijvm", "w+")
+except OSError:
+    raise OSError("ERROR: Could not create the output file")
+
+
+def pre_check_line(line_to_check: str):
+    line_to_check = line_to_check.strip()
+    return line_to_check not in ['\n', '\r\n'] and len(line_to_check) > 0 and line_to_check[0] != "#"
+
+
+with outputFile:
+    with input_file:
+        for line in input_file:
+            if pre_check_line(line):
+                outputFile.write(f"{build_instruction(line.strip()).to_machine_code()}\n")
+
+
+def get_filename_without_extension(filename_to_format: str):
+    return filename_to_format.split(".") if "." in filename_to_format else filename_to_format

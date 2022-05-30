@@ -117,18 +117,18 @@ def build_instruction(line: str):
         print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")
 
 
-def get_register_binary_code(register):
+def get_register_binary_code(register: str):
     return "{0:05b}".format(perform_overflow_if_happens(int(register.replace("x", "")), 5))
 
 
-def get_immediate_binary_12bits(immediate):
+def get_immediate_binary_12bits(immediate: str):
     return "{0:012b}".format(perform_overflow_if_happens(int(immediate), 12))
 
 
-def get_immediate_binary_20bits(immediate):
+def get_immediate_binary_20bits(immediate: str):
     return "{0:020b}".format(perform_overflow_if_happens(int(immediate), 20))
 
 
-def perform_overflow_if_happens(value, max_bits):
+def perform_overflow_if_happens(value: int, max_bits: int):
     max_value = 2 ** max_bits
     return value % max_value if value >= max_value else value

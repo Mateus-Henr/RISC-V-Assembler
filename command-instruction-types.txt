@@ -176,6 +176,7 @@ neg rd, rs	sub rd, x0, rs   (Two's complement)
 li          addi x0, x0, 0   (Load immediate)
 
 
+
 Number bases to be implemented
 - Binary.
 - Decimal.

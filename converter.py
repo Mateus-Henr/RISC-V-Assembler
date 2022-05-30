@@ -1,4 +1,4 @@
-from types import RType, IType, SType, UType
+from instruction_types import RType, IType, SType, UType
 
 FUNCT3 = 0
 FUNCT7 = 1

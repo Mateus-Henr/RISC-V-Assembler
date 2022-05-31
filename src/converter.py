@@ -75,11 +75,11 @@ def assemble_instruction(line: str):
         # use the function that gets the registers/immediates binary code and the dictionary of the Stype to create
         # the binaries.
         instruction = {
-            "immediate7": immediate[5:11],
+            "immediate7": immediate[5:12],
             "rs2": get_register_binary_code(user_input[3]),
             "rs1": get_register_binary_code(user_input[1]),
             "funct3": S_TYPES[instruction_name][FUNCT3],
-            "immediate5": immediate[0:4]
+            "immediate5": immediate[0:5]
         }
 
         # return a Stype unctions fild with the gated binaries.

@@ -2,57 +2,11 @@
 code. """
 
 # internal imports
-from instruction_types import RType, IType, SType, UType
+from instruction_types import *
 
 # global variables
 FUNCT3 = 0
 FUNCT7 = 1
-
-# stores all Rtype's instructions funct6/7 and func3
-R_TYPES = {
-    "add": ["000", "0000000"],
-    "sub": ["000", "0100000"],
-    "and": ["111", "0000000"],
-    "or": ["110", "0000000"],
-    "xor": ["100", "0000000"],
-    "sll": ["001", "0000000"],
-    "srl": ["101", "0000000"],
-    "lrd": ["011", "0010000"],
-    "scd": ["011", "0001100"],
-
-    # Pseudo instruction
-    "neg": ["000", "0100000"]
-}
-
-# stores all Ytype's instructions funct6/7 and func3
-I_TYPES = {
-    "addi": ["000"],
-    "andi": ["111"],
-    "ori": ["110"],
-    "lb": ["000"],
-    "lbu": ["100"],
-    "lh": ["001"],
-    "lhu": ["101"],
-    "lw": ["010"],
-    "lwu": ["110"],
-    "ld": ["011"],
-
-    # Pseudo instructions
-    "nop": ["000"],
-    "li": ["000"],
-    "mv": ["000"]
-}
-
-# stores all Stype's instructions funct6/7 and func3
-S_TYPES = {
-    "sd": ["111"],
-    "sw": ["010"],
-    "sh": ["001"],
-    "sb": ["000"]
-}
-
-# stores all Utype's instructions funct6/7 and func3
-U_TYPES = {"lui"}
 
 
 # function to convert the instructions into objects of each type
@@ -161,7 +115,7 @@ def get_register_binary_code(register: str):
     input: register string
 
     output: a 5 bits binary number."""
-    return "{0:05b}".format(perform_overflow_if_happens(convert_to_decimal(register.replace("x", "")), 5))
+    return "{0:05b}".format(overflow_if_true_non_negative(convert_to_decimal(register.replace("x", "")), 5))
 
 
 # function that return the binary code of the immediate
@@ -171,7 +125,7 @@ def get_immediate_binary_12bits(immediate: str):
     input: immediate string
 
     output: a 12 bits binary number."""
-    return "{0:012b}".format(perform_overflow_if_happens(convert_to_decimal(immediate), 12))
+    return "{0:012b}".format(overwflow_if_true(convert_to_decimal(immediate), 11) & 0b1111111111111)
 
 
 # function that return the binary code of the 20bits immediate
@@ -181,11 +135,11 @@ def get_immediate_binary_20bits(immediate: str):
     input: immediate string
 
     output: a 20 bits binary number."""
-    return "{0:020b}".format(perform_overflow_if_happens(convert_to_decimal(immediate), 20))
+    return "{0:020b}".format(overwflow_if_true(convert_to_decimal(immediate), 19) & 0b1111111111111111111111)
 
 
 # function that performs the overflow
-def perform_overflow_if_happens(value: int, max_bits: int):
+def overflow_if_true_non_negative(value: int, max_bits: int):
     """define a max value and return another if the overflow happens or not returning the rest if it happens
 
     input: a int value, a max value
@@ -193,7 +147,19 @@ def perform_overflow_if_happens(value: int, max_bits: int):
     output: int max value or a value"""
     max_value = 2 ** max_bits
 
-    return value % max_value if value >= max_value else value
+    return value % max_value if value >= max_value or value < 0 else value
+
+
+def overwflow_if_true(value: int, max_bits: int):
+    min_value = -(2 ** max_bits)
+    max_value = -min_value
+
+    if value >= max_value:
+        return value % max_value
+    elif value <= min_value:
+        return -(value % value)
+
+    return value
 
 
 def convert_to_decimal(value: str):

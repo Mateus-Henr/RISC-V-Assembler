@@ -7,6 +7,52 @@
 
      and for each of then a function that convert the class to a string"""
 
+# stores all Rtype's instructions funct6/7 and func3
+R_TYPES = {
+    "add": ["000", "0000000"],
+    "sub": ["000", "0100000"],
+    "and": ["111", "0000000"],
+    "or": ["110", "0000000"],
+    "xor": ["100", "0000000"],
+    "sll": ["001", "0000000"],
+    "srl": ["101", "0000000"],
+    "lrd": ["011", "0010000"],
+    "scd": ["011", "0001100"],
+
+    # Pseudo instruction
+    "neg": ["000", "0100000"]
+}
+
+# stores all Ytype's instructions funct6/7 and func3
+I_TYPES = {
+    "addi": ["000"],
+    "andi": ["111"],
+    "ori": ["110"],
+    "lb": ["000"],
+    "lbu": ["100"],
+    "lh": ["001"],
+    "lhu": ["101"],
+    "lw": ["010"],
+    "lwu": ["110"],
+    "ld": ["011"],
+
+    # Pseudo instructions
+    "nop": ["000"],
+    "li": ["000"],
+    "mv": ["000"]
+}
+
+# stores all Stype's instructions funct6/7 and func3
+S_TYPES = {
+    "sd": ["111"],
+    "sw": ["010"],
+    "sh": ["001"],
+    "sb": ["000"]
+}
+
+# stores all Utype's instructions funct6/7 and func3
+U_TYPES = {"lui"}
+
 
 # a Rtype object to store the instruction's values
 class RType(object):

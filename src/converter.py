@@ -125,7 +125,7 @@ def get_immediate_binary_12bits(immediate: str):
     input: immediate string
 
     output: a 12 bits binary number."""
-    return "{0:012b}".format(overwflow_if_true(convert_to_decimal(immediate), 11) & 0b1111111111111)
+    return "{0:012b}".format(overwflow_if_true(convert_to_decimal(immediate), 11) & 0b11111111111)
 
 
 # function that return the binary code of the 20bits immediate
@@ -135,7 +135,7 @@ def get_immediate_binary_20bits(immediate: str):
     input: immediate string
 
     output: a 20 bits binary number."""
-    return "{0:020b}".format(overwflow_if_true(convert_to_decimal(immediate), 19) & 0b1111111111111111111111)
+    return "{0:020b}".format(overwflow_if_true(convert_to_decimal(immediate), 19) & 0b1111111111111111111)
 
 
 # function that performs the overflow

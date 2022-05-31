@@ -17,7 +17,7 @@ except FileNotFoundError:
 
 # try to create the output file if it can't return error message
 try:
-    output_file = open(f"{FILE_PATH}{filename.split('.')[0]}-output.ijvm", "w+")
+    output_file = open(f"{FILE_PATH}{filename.split('.')[0]}-output.bin", "w+")
 except OSError:
     raise OSError("ERROR: Could not create the output file")
 
@@ -41,7 +41,7 @@ with output_file:
     with input_file:
         for line in input_file:
             if pre_check_line(line):
-                output_file.write(f"{build_instruction(line.strip()).to_machine_code()}\n")
+                output_file.write(f"{assemble_instruction(line)}\n")
 
 
 # function that gets the file name without extension

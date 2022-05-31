@@ -10,7 +10,7 @@ FUNCT7 = 1
 
 
 # function to convert the instructions into objects of each type
-def build_instruction(line: str):
+def assemble_instruction(line: str):
     """receive a string line, from the archive, and separate each part os the instruction, finally convert it in an
     object of the detected type. Using the global functions of dictionaries and the get_register_binary_code to do the
     objects, also utilizes the global variables of Funct7 and Funct3 to take the values of the dictionary.
@@ -44,7 +44,7 @@ def build_instruction(line: str):
                      instruction["rs2"],
                      instruction["rs1"],
                      instruction["funct3"],
-                     instruction["rd"])
+                     instruction["rd"]).to_machine_code()
 
     # se if the function is a Itype and split/replace the strings
     elif instruction_name in I_TYPES:
@@ -63,7 +63,7 @@ def build_instruction(line: str):
         return IType(instruction["immediate"],
                      instruction["rs1"],
                      instruction["funct3"],
-                     instruction["rd"])
+                     instruction["rd"]).to_machine_code()
 
     # se if the function is a Stype and split/replace the strings
     elif instruction_name in S_TYPES:
@@ -87,7 +87,7 @@ def build_instruction(line: str):
                      instruction["rs2"],
                      instruction["rs1"],
                      instruction["funct3"],
-                     instruction["immediate5"])
+                     instruction["immediate5"]).to_machine_code()
 
     # se if the function is a Utype and split/replace the strings
     elif instruction_name in U_TYPES:
@@ -102,7 +102,7 @@ def build_instruction(line: str):
 
         # return a Stype unctions fild with the gated binaries.
         return UType(instruction["immediate"],
-                     instruction["rd"])
+                     instruction["rd"]).to_machine_code()
     # print a message error if the instruction is not supported
     else:
         print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")

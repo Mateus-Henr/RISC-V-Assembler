@@ -74,7 +74,7 @@ class RType(object):
         """transform the class in a machine code.
         input: Rtype class(self)
         output: a machine code string"""
-        return f"{self.funct7} {self.rs2} {self.rs1} {self.funct3} {self.rd} {self.opcode}"
+        return f"{self.funct7}{self.rs2}{self.rs1}{self.funct3}{self.rd}{self.opcode}"
 
 
 # a Itype object to store the instruction's values
@@ -97,7 +97,7 @@ class IType(object):
         input: Itype class(self)
         output: a machine code string"""
 
-        return f"{self.immediate} {self.rs1} {self.funct3} {self.rd} {self.opcode}"
+        return f"{self.immediate}{self.rs1}{self.funct3}{self.rd}{self.opcode}"
 
 
 # a Stype object to store the instruction's values
@@ -121,7 +121,7 @@ class SType(object):
         input: Stype class(self)
         output: a machine code string"""
 
-        return f"{self.immediate7} {self.rs2} {self.rs1} {self.funct3} {self.immediate5} {self.opcode}"
+        return f"{self.immediate7}{self.rs2}{self.rs1}{self.funct3}{self.immediate5}{self.opcode}"
 
 
 # a Utype object to store the instruction's values
@@ -142,4 +142,4 @@ class UType(object):
         input: Utype class(self)
         output: a machine code string"""
 
-        return f"{self.immediate} {self.rd} {self.opcode}"
+        return f"{self.immediate}{self.rd}{self.opcode}"

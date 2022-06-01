@@ -1,8 +1,5 @@
 from converter import *
 
-INPUT_FILE_PATH = "../input_files/"
-OUTPUT_FILE_PATH = "output_files/"
-
 
 def read_file_and_generate_output(input_file_path: str, output_file_path: str):
     try:
@@ -19,9 +16,9 @@ def read_file_and_generate_output(input_file_path: str, output_file_path: str):
             print(f"Output file generated at: {output_file_path}.bin")
 
         except OSError:
-            raise OSError(f"ERROR: Could not create output file: '{output_file_path}.bin'.")
+            print(f"ERROR: Could not create output file: '{output_file_path}.bin'.")
     except FileNotFoundError:
-        raise FileNotFoundError(f"ERROR: No such file or directory: '{input_file_path}'.")
+        print(f"ERROR: No such file or directory: '{input_file_path}'.")
 
 
 def read_file_and_print(input_file_path: str):
@@ -33,7 +30,7 @@ def read_file_and_print(input_file_path: str):
                 if pre_check_line(line):
                     print(f"{assemble_instruction(line)}")
     except FileNotFoundError:
-        raise FileNotFoundError(f"ERROR: No such file or directory: '{input_file_path}'.")
+        print(f"ERROR: No such file or directory: '{input_file_path}'.")
 
 
 # function that check if the line is readable and is not a comment line or an empty line

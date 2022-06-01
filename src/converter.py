@@ -55,8 +55,8 @@ def assemble_instruction(line: str):
         instruction = {
             "immediate": get_immediate_binary_12bits(user_input[3]),
             "rs1": get_register_binary_code(user_input[2]),
-            "funct3": get_register_binary_code(user_input[1]),
-            "rd": I_TYPES[instruction_name][FUNCT3]
+            "funct3": I_TYPES[instruction_name][FUNCT3],
+            "rd": get_register_binary_code(user_input[1])
         }
 
         # return a Itype unctions fild with the gated binaries.
@@ -125,7 +125,7 @@ def get_immediate_binary_12bits(immediate: str):
     input: immediate string
 
     output: a 12 bits binary number."""
-    return "{0:012b}".format(overflow_if_true(convert_to_decimal(immediate), 11) & 0b11111111111)
+    return "{0:012b}".format(overflow_if_true(convert_to_decimal(immediate), 11) & 0b111111111111)
 
 
 # function that return the binary code of the 20bits immediate
@@ -135,7 +135,7 @@ def get_immediate_binary_20bits(immediate: str):
     input: immediate string
 
     output: a 20 bits binary number."""
-    return "{0:020b}".format(overflow_if_true(convert_to_decimal(immediate), 19) & 0b1111111111111111111)
+    return "{0:020b}".format(overflow_if_true(convert_to_decimal(immediate), 19) & 0b11111111111111111111)
 
 
 # function that performs the overflow

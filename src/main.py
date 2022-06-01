@@ -4,7 +4,7 @@
 from converter import *
 
 # stores the path file of the tests
-FILE_PATH = "../test_files/"
+FILE_PATH = "test_files/"
 
 # ask witch test inside the path file to run
 filename = input("Filename: ")

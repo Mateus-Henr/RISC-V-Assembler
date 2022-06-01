@@ -2,25 +2,11 @@
 
 # internal imports
 from converter import *
+import sys
 
 # stores the path file of the tests
 INPUT_FILE_PATH = "input_files/"
 OUTPUT_FILE_PATH = "output_files/"
-
-# ask witch test inside the path file to run
-filename = input("Filename: ")
-
-# try to open the input file if it exists else returns an error message
-try:
-    input_file = open(f"{INPUT_FILE_PATH}{filename}", "r")
-except FileNotFoundError:
-    raise FileNotFoundError(f"Error reading the file:{filename}")
-
-# try to create the output file if it can't return error message
-try:
-    output_file = open(f"{OUTPUT_FILE_PATH}{filename.split('.')[0]}-output.bin", "w+")
-except OSError:
-    raise OSError("ERROR: Could not create the output file")
 
 
 # function that check if the line is readable and is not a comment line or an empty line
@@ -34,9 +20,35 @@ def pre_check_line(line_to_check: str):
     line_to_check = line_to_check.strip()
     return line_to_check not in ['\n', '\r\n'] and len(line_to_check) > 0 and line_to_check[0] != "#"
 
+
+filename = ""
+
+if len(sys.argv) <= 3:
+    filename = input("Filename: ")
+else:
+    filename = sys.argv[3]
+
+# try to open the input file if it exists else returns an error message
+try:
+    input_file = open(f"{INPUT_FILE_PATH}{filename}", "r")
+except FileNotFoundError:
+    raise FileNotFoundError(f"Error reading the file:{filename}")
+
+if len(sys.argv) > 0:
+    with input_file:
+        for line in input_file:
+            if pre_check_line(line):
+                print(f"{assemble_instruction(line)}")
+    sys.exit()
+
+# try to create the output file if it can't return error message
+try:
+    output_file = open(f"{OUTPUT_FILE_PATH}{filename.split('.')[0]}-output.bin", "w+")
+except OSError:
+    raise OSError("ERROR: Could not create the output file")
+
     # read each input file and use the build instruction to create a binary code for each instruction, and store it in the
     # output file
-
 
 with output_file:
     with input_file:

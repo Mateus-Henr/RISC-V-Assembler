@@ -4,20 +4,21 @@
 from converter import *
 
 # stores the path file of the tests
-FILE_PATH = "test_files/"
+INPUT_FILE_PATH = "input_files/"
+OUTPUT_FILE_PATH = "output_files/"
 
 # ask witch test inside the path file to run
 filename = input("Filename: ")
 
 # try to open the input file if it exists else returns an error message
 try:
-    input_file = open(f"{FILE_PATH}{filename}", "r")
+    input_file = open(f"{INPUT_FILE_PATH}{filename}", "r")
 except FileNotFoundError:
     raise FileNotFoundError(f"Error reading the file:{filename}")
 
 # try to create the output file if it can't return error message
 try:
-    output_file = open(f"{FILE_PATH}{filename.split('.')[0]}-output.bin", "w+")
+    output_file = open(f"{OUTPUT_FILE_PATH}{filename.split('.')[0]}-output.bin", "w+")
 except OSError:
     raise OSError("ERROR: Could not create the output file")
 

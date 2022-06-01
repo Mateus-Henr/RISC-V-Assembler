@@ -1,29 +1,39 @@
 from converter import *
 
 INPUT_FILE_PATH = "../input_files/"
-OUTPUT_FILE_PATH = "../output_files/"
+OUTPUT_FILE_PATH = "output_files/"
 
 
-def read_file_and_generate_output(input_filename: str, output_filename: str):
-    input_file = open(f"{INPUT_FILE_PATH}{input_filename}", "r")
-    output_file = open(f"{OUTPUT_FILE_PATH}{output_filename}.bin", "w+")
+def read_file_and_generate_output(input_file_path: str, output_file_path: str):
+    try:
+        input_file = open(input_file_path, "r")
 
-    with output_file:
+        try:
+            output_file = open(f"{input_file_path}.bin", "w+")
+
+            with output_file:
+                with input_file:
+                    for line in input_file:
+                        if pre_check_line(line):
+                            output_file.write(f"{assemble_instruction(line)}\n")
+            print(f"Output file generated at: {output_file_path}.bin")
+
+        except OSError:
+            raise OSError(f"ERROR: Could not create output file: '{output_file_path}.bin'.")
+    except FileNotFoundError:
+        raise FileNotFoundError(f"ERROR: No such file or directory: '{input_file_path}'.")
+
+
+def read_file_and_print(input_file_path: str):
+    try:
+        input_file = open(input_file_path, "r")
+
         with input_file:
             for line in input_file:
                 if pre_check_line(line):
-                    output_file.write(f"{assemble_instruction(line)}\n")
-
-    print(f"Output file generated at: {INPUT_FILE_PATH}{output_filename}.bin")
-
-
-def read_file_and_print(input_filename: str):
-    input_file = open(f"{INPUT_FILE_PATH}{input_filename}", "r")
-
-    with input_file:
-        for line in input_file:
-            if pre_check_line(line):
-                print(f"{assemble_instruction(line)}")
+                    print(f"{assemble_instruction(line)}")
+    except FileNotFoundError:
+        raise FileNotFoundError(f"ERROR: No such file or directory: '{input_file_path}'.")
 
 
 # function that check if the line is readable and is not a comment line or an empty line

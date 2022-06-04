@@ -1,5 +1,3 @@
-"""Main code of the project, open the selected file and return the machine binary code of it."""
-
 import sys
 from file import *
 

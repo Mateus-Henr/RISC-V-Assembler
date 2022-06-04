@@ -1,11 +1,22 @@
 from converter import *
 import os
 
+# Default file paths so the user don't have to specify the folders;.
 INPUT_FILE_PATH = f"{os.path.split(os.path.dirname(__file__))[-2]}/input_files/"
 OUTPUT_FILE_PATH = f"{os.path.split(os.path.dirname(__file__))[-2]}/output_files/"
 
 
 def read_file_and_generate_output(input_filename: str, output_filename: str):
+    """
+    Reads data from a file and writes it out in an output file.
+
+    Parameters
+    ----------
+    input_filename : str
+        name of the input file.
+    output_filename : str
+        name of the output file.
+    """
     try:
         input_file = open(f"{INPUT_FILE_PATH}{input_filename}", "r")
 
@@ -30,6 +41,15 @@ def read_file_and_generate_output(input_filename: str, output_filename: str):
 
 
 def read_file_and_print(input_filename: str):
+    """
+    Reads data from a file and prints out result on the console.
+
+    Parameters
+    ----------
+    input_filename : str
+        name of the input file.
+    """
+
     try:
         input_file = open(f"{INPUT_FILE_PATH}{input_filename}", "r")
 
@@ -47,13 +67,20 @@ def read_file_and_print(input_filename: str):
         print(f"ERROR: No such file or directory: '{input_filename}'.")
 
 
-# function that check if the line is readable and is not a comment line or an empty line
 def pre_check_line(line_to_check: str):
-    """receive a line to check if the line is readable, strip the line a check for empty spaces or comments.
+    """
+    Checks if a line is a comment or an empty line.
 
-    input: a line string to check.
+    Parameters
+    ----------
+    line_to_check : str
+        line to check.
 
-    output: a string that is readable."""
+    Returns
+    -------
+    bool
+        whether the line is not a comment or an empty line.
+    """
 
     line_to_check = line_to_check.strip()
     return line_to_check not in ['\n', '\r\n'] and len(line_to_check) > 0 and line_to_check[0] != "#"

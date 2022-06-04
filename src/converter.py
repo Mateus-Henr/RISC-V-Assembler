@@ -1,25 +1,25 @@
-from instruction_types import *
+import instruction_types as types
 
 
 def convert_instruction_to_binary(line: str):
     """
-    Converts an instruction to binary code if valid.
+    Converts an instruction to binary number if valid.
 
     Parameters
     ----------
     line : str
-        A string that contains the instruction.
+        Instruction statement.
 
     Returns
     -------
     str
-        A string containing the binary code of the translated instruction if valid, or
-        an empty string if invalid.
+        Binary number of the translated instruction if valid, or an empty
+        string if invalid.
     """
 
     instruction_name = line.split()[0]
 
-    if instruction_name in R_TYPES:
+    if instruction_name in types.R_TYPES:
         user_input = line.replace(",", " ").split()[:4]
 
         if check_invalid_values(user_input):
@@ -27,20 +27,20 @@ def convert_instruction_to_binary(line: str):
 
         # Created to make readability easier when passing values to the object type.
         instruction = {
-            "funct7": R_TYPES[user_input[0]][FUNCT7],
-            "rs2": get_register_binary_code(user_input[3]),
-            "rs1": get_register_binary_code(user_input[2]),
-            "funct3": R_TYPES[user_input[0]][FUNCT3],
-            "rd": get_register_binary_code(user_input[1])
+            "funct7": types.R_TYPES[user_input[0]][types.FUNCT7],
+            "rs2": get_register_binary_number(user_input[3]),
+            "rs1": get_register_binary_number(user_input[2]),
+            "funct3": types.R_TYPES[user_input[0]][types.FUNCT3],
+            "rd": get_register_binary_number(user_input[1])
         }
 
-        return RType(instruction["funct7"],
-                     instruction["rs2"],
-                     instruction["rs1"],
-                     instruction["funct3"],
-                     instruction["rd"]).to_machine_code()
+        return types.RType(instruction["funct7"],
+                           instruction["rs2"],
+                           instruction["rs1"],
+                           instruction["funct3"],
+                           instruction["rd"]).to_machine_code()
 
-    elif instruction_name in I_TYPES:
+    elif instruction_name in types.I_TYPES:
         user_input = line.replace(",", " ").split()[:4]
 
         if check_invalid_values(user_input):
@@ -49,17 +49,17 @@ def convert_instruction_to_binary(line: str):
         # Created to make readability easier when passing values to the object type.
         instruction = {
             "immediate": get_immediate_binary_12bits(user_input[3]),
-            "rs1": get_register_binary_code(user_input[2]),
-            "funct3": I_TYPES[instruction_name][FUNCT3],
-            "rd": get_register_binary_code(user_input[1])
+            "rs1": get_register_binary_number(user_input[2]),
+            "funct3": types.I_TYPES[instruction_name][types.FUNCT3],
+            "rd": get_register_binary_number(user_input[1])
         }
 
-        return IType(instruction["immediate"],
-                     instruction["rs1"],
-                     instruction["funct3"],
-                     instruction["rd"]).to_machine_code()
+        return types.IType(instruction["immediate"],
+                           instruction["rs1"],
+                           instruction["funct3"],
+                           instruction["rd"]).to_machine_code()
 
-    elif instruction_name in S_TYPES:
+    elif instruction_name in types.S_TYPES:
         user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:4]
 
         if check_invalid_values(user_input):
@@ -70,19 +70,19 @@ def convert_instruction_to_binary(line: str):
         # Created to make readability easier when passing values to the object type.
         instruction = {
             "immediate7": immediate[5:12],
-            "rs2": get_register_binary_code(user_input[3]),
-            "rs1": get_register_binary_code(user_input[1]),
-            "funct3": S_TYPES[instruction_name][FUNCT3],
+            "rs2": get_register_binary_number(user_input[3]),
+            "rs1": get_register_binary_number(user_input[1]),
+            "funct3": types.S_TYPES[instruction_name][types.FUNCT3],
             "immediate5": immediate[0:5]
         }
 
-        return SType(instruction["immediate7"],
-                     instruction["rs2"],
-                     instruction["rs1"],
-                     instruction["funct3"],
-                     instruction["immediate5"]).to_machine_code()
+        return types.SType(instruction["immediate7"],
+                           instruction["rs2"],
+                           instruction["rs1"],
+                           instruction["funct3"],
+                           instruction["immediate5"]).to_machine_code()
 
-    elif instruction_name in U_TYPES:
+    elif instruction_name in types.U_TYPES:
         user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:3]
 
         if check_invalid_values(user_input):
@@ -91,31 +91,30 @@ def convert_instruction_to_binary(line: str):
         # Created to make readability easier when passing values to the object type.
         instruction = {
             "immediate": get_immediate_binary_20bits(user_input[2]),
-            "rd": get_register_binary_code(user_input[1])
+            "rd": get_register_binary_number(user_input[1])
         }
 
-        return UType(instruction["immediate"],
-                     instruction["rd"]).to_machine_language()
+        return types.UType(instruction["immediate"],
+                           instruction["rd"]).to_machine_language()
 
     # Prints a message if the instruction is not supported.
     print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")
     return ""
 
 
-# function that return the binary code of the register
-def get_register_binary_code(register: str):
+def get_register_binary_number(register: str):
     """
     Converts a register to its binary number of 5-bits size.
 
     Parameters
     ----------
     register : str
-        A string that containing the register.
+        Register value.
 
     Returns
     -------
     str
-        5-bits binary code of the register.
+        5-bits binary number of the register.
     """
 
     return "{0:05b}".format(
@@ -129,7 +128,7 @@ def get_immediate_binary_12bits(immediate: str):
     Parameters
     ----------
     immediate : str
-        A string containing the immediate.
+        Immediate value.
 
     Returns
     -------
@@ -142,7 +141,6 @@ def get_immediate_binary_12bits(immediate: str):
         overflow_or_underflow_if_true(convert_immediate_to_decimal(immediate), 11) & 0b111111111111)
 
 
-# function that return the binary code of the 20bits immediate
 def get_immediate_binary_20bits(immediate: str):
     """
     Converts an immediate its binary number of 20-bits size.
@@ -150,7 +148,7 @@ def get_immediate_binary_20bits(immediate: str):
     Parameters
     ----------
     immediate : str
-        A string containing the immediate.
+        Immediate value.
 
     Returns
     -------
@@ -163,7 +161,6 @@ def get_immediate_binary_20bits(immediate: str):
         overflow_or_underflow_if_true(convert_immediate_to_decimal(immediate), 19) & 0b11111111111111111111)
 
 
-# function that performs the overflow
 def overflow_if_true(value: int, max_bits: int):
     """
     Checks if value overflowed, if true it performs te overflow operation.
@@ -171,14 +168,14 @@ def overflow_if_true(value: int, max_bits: int):
     Parameters
     ----------
     value : int
-        The value to be checked.
+        Value to be checked.
     max_bits : int
-        The maximum number of bits of the binary number.
+        Maximum number of bits of the binary number.
 
     Returns
     -------
     int
-       the same value passed in if it didn't overflow, otherwise the value after
+       Same value passed in if it didn't overflow, otherwise the value after
        performing the overflow.
     """
 
@@ -195,15 +192,15 @@ def overflow_or_underflow_if_true(value: int, max_bits: int):
     Parameters
     ----------
     value : int
-        The value to be checked.
+        Value to be checked.
     max_bits : int
-        The maximum number of bits of the binary number.
+        Maximum number of bits of the binary number.
 
     Returns
     -------
     int
-        the same value passed in if it didn't overflow, otherwise the value after
-        performing the overflow.
+        Same value passed in if it didn't overflow or underflow, otherwise the value after
+        performing the overflow or underflow.
     """
 
     min_value = -(2 ** max_bits)
@@ -232,7 +229,7 @@ def convert_immediate_to_decimal(number: str):
     Returns
     -------
     int
-        decimal number if the passed in number is valid, otherwise, 0 is returned.
+        Decimal number if the passed in number is valid, otherwise, 0 is returned.
         When its invalid is because a register was passed in.
     """
 
@@ -256,12 +253,12 @@ def check_invalid_values(items: list):
     Parameters
     ----------
     items : list
-        instruction's parameters.
+        Instruction's parameters.
 
     Returns
     -------
     bool
-        whether the parameters are valid or not.
+        Whether the parameters are valid or not.
     """
 
     whitelist = ["x", "-"]

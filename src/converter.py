@@ -1,7 +1,6 @@
 """folder that store the converter functions, that stores the values in variables and convert the .asm in machine
 code. """
 
-# internal imports
 from instruction_types import *
 
 # global variables
@@ -28,7 +27,10 @@ def assemble_instruction(line: str):
 
     # se if the function is a Rtype and split/replace the strings.
     if instruction_name in R_TYPES:
-        user_input = line.replace(",", " ").split()
+        user_input = line.replace(",", " ").split()[:4]
+
+        if check_invalid_values(user_input):
+            return ""
 
         # use the function that gets the registers binary code and the dictionary of the Rtype to create the binaries.
         instruction = {
@@ -48,7 +50,10 @@ def assemble_instruction(line: str):
 
     # se if the function is a Itype and split/replace the strings
     elif instruction_name in I_TYPES:
-        user_input = line.replace(",", " ").split()
+        user_input = line.replace(",", " ").split()[:4]
+
+        if check_invalid_values(user_input):
+            return ""
 
         # use the function that gets the registers binary/immediate code and the dictionary of the Itype to create
         # the binaries.
@@ -67,12 +72,15 @@ def assemble_instruction(line: str):
 
     # se if the function is a Stype and split/replace the strings
     elif instruction_name in S_TYPES:
-        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()
+        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:3]
+
+        if check_invalid_values(user_input):
+            return ""
 
         # immediate variable that stores the output of the get_immediate_binary_12bits
         immediate = get_immediate_binary_12bits(user_input[2])
 
-        # use the function that gets the registers/immediates binary code and the dictionary of the Stype to create
+        # use the function that gets the registers/immediate binary code and the dictionary of the Stype to create
         # the binaries.
         instruction = {
             "immediate7": immediate[5:12],
@@ -91,7 +99,10 @@ def assemble_instruction(line: str):
 
     # se if the function is a Utype and split/replace the strings
     elif instruction_name in U_TYPES:
-        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()
+        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:3]
+
+        if check_invalid_values(user_input):
+            return ""
 
         # use the function that gets the registers/immediate binary code and the dictionary of the Stype to create
         # the binaries.
@@ -103,9 +114,11 @@ def assemble_instruction(line: str):
         # return a Stype unctions fild with the gated binaries.
         return UType(instruction["immediate"],
                      instruction["rd"]).to_machine_code()
+
     # print a message error if the instruction is not supported
-    else:
-        print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")
+    print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")
+
+    return ""
 
 
 # function that return the binary code of the register
@@ -115,7 +128,7 @@ def get_register_binary_code(register: str):
     input: register string
 
     output: a 5 bits binary number."""
-    return "{0:05b}".format(overflow_if_true_non_negative(convert_to_decimal(register.replace("x", "")), 5))
+    return "{0:05b}".format(overflow_if_true(convert_to_decimal(register.replace("x", "")), 5))
 
 
 # function that return the binary code of the immediate
@@ -125,7 +138,7 @@ def get_immediate_binary_12bits(immediate: str):
     input: immediate string
 
     output: a 12 bits binary number."""
-    return "{0:012b}".format(overflow_if_true(convert_to_decimal(immediate), 11) & 0b111111111111)
+    return "{0:012b}".format(overflow_or_underflow_if_true(convert_to_decimal(immediate), 11) & 0b111111111111)
 
 
 # function that return the binary code of the 20bits immediate
@@ -135,11 +148,11 @@ def get_immediate_binary_20bits(immediate: str):
     input: immediate string
 
     output: a 20 bits binary number."""
-    return "{0:020b}".format(overflow_if_true(convert_to_decimal(immediate), 19) & 0b11111111111111111111)
+    return "{0:020b}".format(overflow_or_underflow_if_true(convert_to_decimal(immediate), 19) & 0b11111111111111111111)
 
 
 # function that performs the overflow
-def overflow_if_true_non_negative(value: int, max_bits: int):
+def overflow_if_true(value: int, max_bits: int):
     """define a max value and return another if the overflow happens or not returning the rest if it happens
 
     input: a int value, a max value
@@ -150,7 +163,7 @@ def overflow_if_true_non_negative(value: int, max_bits: int):
     return value % max_value if value >= max_value or value < 0 else value
 
 
-def overflow_if_true(value: int, max_bits: int):
+def overflow_or_underflow_if_true(value: int, max_bits: int):
     min_value = -(2 ** max_bits)
     max_value = -min_value
 
@@ -166,10 +179,22 @@ def convert_to_decimal(value: str):
     try:
         if "0x" in value:
             return int(value, 16)
-        elif all(letter == '0' or letter == '1' for letter in value):
+        elif all(digit == '0' or digit == '1' for digit in value):
             return int(value, 2)
-        else:
-            return int(value)
+
     except ValueError:
         print("ERROR: Syntax error, unexpected values. Setting invalid parameter to 0.")
         return 0
+
+    return int(value)
+
+
+def check_invalid_values(items: list):
+    whitelist = ["x"]
+
+    for item_number in range(1, len(items)):
+        for letter in items[item_number]:
+            if not letter.isdigit() and letter not in whitelist:
+                return True
+
+    return False

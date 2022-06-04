@@ -16,11 +16,15 @@ def read_file_and_generate_output(input_filename: str, output_filename: str):
                 with input_file:
                     for line in input_file:
                         if pre_check_line(line):
-                            output_file.write(f"{assemble_instruction(line)}\n")
+                            binary_value = assemble_instruction(line)
+                            if binary_value:
+                                output_file.write(f"{binary_value}\n")
+
             print(f"Output file generated at: {OUTPUT_FILE_PATH}{output_filename}.bin.")
 
         except OSError:
             print(f"ERROR: Could not create output file: '{output_filename}.bin'.")
+
     except FileNotFoundError:
         print(f"ERROR: No such file or directory: '{input_filename}'.")
 
@@ -30,9 +34,15 @@ def read_file_and_print(input_filename: str):
         input_file = open(f"{INPUT_FILE_PATH}{input_filename}", "r")
 
         with input_file:
+            print(f"Translated instructions from '{input_filename}':")
             for line in input_file:
                 if pre_check_line(line):
-                    print(f"{assemble_instruction(line)}")
+                    binary_value = assemble_instruction(line)
+                    if binary_value:
+                        print(binary_value)
+                    else:
+                        print("Invalid instruction, jumping it.")
+
     except FileNotFoundError:
         print(f"ERROR: No such file or directory: '{input_filename}'.")
 

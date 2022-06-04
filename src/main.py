@@ -15,4 +15,4 @@ if __name__ == "__main__":
         else:
             raise ValueError("ERROR: Missing arguments.")
     else:
-        raise ValueError("ERROR: Missing arguments or too many arguments.")
+        raise ValueError("ERROR: Missing argument(s) or too many arguments.")

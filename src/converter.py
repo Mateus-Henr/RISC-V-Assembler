@@ -3,13 +3,13 @@ code. """
 
 from instruction_types import *
 
-# global variables
+# Constants
 FUNCT3 = 0
 FUNCT7 = 1
 
 
 # function to convert the instructions into objects of each type
-def assemble_instruction(line: str):
+def convert_instruction_to_binary(line: str):
     """receive a string line, from the archive, and separate each part os the instruction, finally convert it in an
     object of the detected type. Using the global functions of dictionaries and the get_register_binary_code to do the
     objects, also utilizes the global variables of Funct7 and Funct3 to take the values of the dictionary.
@@ -72,7 +72,7 @@ def assemble_instruction(line: str):
 
     # se if the function is a Stype and split/replace the strings
     elif instruction_name in S_TYPES:
-        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:3]
+        user_input = line.replace(",", " ").replace("(", " ").replace(")", " ").split()[:4]
 
         if check_invalid_values(user_input):
             return ""
@@ -117,7 +117,6 @@ def assemble_instruction(line: str):
 
     # print a message error if the instruction is not supported
     print(f"ERROR: Instruction name '{instruction_name}' not in the instruction set.")
-
     return ""
 
 
@@ -128,7 +127,7 @@ def get_register_binary_code(register: str):
     input: register string
 
     output: a 5 bits binary number."""
-    return "{0:05b}".format(overflow_if_true(convert_to_decimal(register.replace("x", "")), 5))
+    return "{0:05b}".format(overflow_if_true(convert_to_decimal(register.replace("x", "").replace("-", "")), 5))
 
 
 # function that return the binary code of the immediate
@@ -181,20 +180,20 @@ def convert_to_decimal(value: str):
             return int(value, 16)
         elif all(digit == '0' or digit == '1' for digit in value):
             return int(value, 2)
+        return int(value)
 
+    # This error is thrown if a register is passed in instead of an immediate.
     except ValueError:
-        print("ERROR: Syntax error, unexpected values. Setting invalid parameter to 0.")
+        print("ERROR: Immediate expected, instead receiver was received. Setting invalid parameter to 0.")
         return 0
-
-    return int(value)
 
 
 def check_invalid_values(items: list):
-    whitelist = ["x"]
+    whitelist = ["x", "-"]
 
     for item_number in range(1, len(items)):
-        for letter in items[item_number]:
-            if not letter.isdigit() and letter not in whitelist:
+        for char in items[item_number]:
+            if not char.isdigit() and char not in whitelist:
                 return True
 
     return False

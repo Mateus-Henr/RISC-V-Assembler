@@ -16,7 +16,7 @@ def read_file_and_generate_output(input_filename: str, output_filename: str):
                 with input_file:
                     for line in input_file:
                         if pre_check_line(line):
-                            binary_value = assemble_instruction(line)
+                            binary_value = convert_instruction_to_binary(line)
                             if binary_value:
                                 output_file.write(f"{binary_value}\n")
 
@@ -37,7 +37,7 @@ def read_file_and_print(input_filename: str):
             print(f"Translated instructions from '{input_filename}':")
             for line in input_file:
                 if pre_check_line(line):
-                    binary_value = assemble_instruction(line)
+                    binary_value = convert_instruction_to_binary(line)
                     if binary_value:
                         print(binary_value)
                     else:
